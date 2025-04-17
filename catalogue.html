@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue - Ideal GSM Services</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Catalogue - Ideal GSM Services</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="catalogue.html">Produits</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="catalogue.html" class="menu-btn">Catalogue</a></li>
+                <li><a href="offres.html" class="menu-btn">Offres</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- SECTION CATALOGUE -->
+    <section class="catalogue-list">
+        <h2 id="category-title">Nos Produits</h2>
+        <div id="products-container" class="products"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Ideal GSM Services - Tous droits réservés.</p>
+        <p>Contactez-nous : <a href="contact.html">Page de contact</a></p>
+    </footer>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get("cat");
+
+        const products = {
+            "kits-bluetooth": [
+                { name: "Kit Bluetooth Jabra", image: "images/produit-1.jpg", description: "Son cristallin et portée longue." },
+                { name: "Kit Bluetooth Samsung", image: "images/produit-2.jpg", description: "Design compact et autonomie longue." },
+                { name: "Kit Bluetooth Borofone", image: "images/produit-3.jpg", description: "Léger et performant pour le quotidien." },
+                { name: "Kit Bluetooth Remax", image: "images/produit-4.jpg", description: "Confortable et élégant pour vos appels." }
+            ],
+            "chargeurs": [
+                { name: "Chargeur V18 Ultra-Rapide", image: "images/produit-5.jpg", description: "Chargez vos appareils à la vitesse de l’éclair." },
+                { name: "Chargeur Samsung Original", image: "images/produit-6.jpg", description: "Fiabilité et sécurité garantie Samsung." }
+            ],
+            "cables": [
+                { name: "Câble iPhone Original", image: "images/produit-7.jpg", description: "Compatible avec tous les modèles Apple récents." },
+                { name: "Câble iPhone Baseus", image: "images/produit-8.jpg", description: "Robuste et rapide pour vos appareils Apple." },
+                { name: "Câble Samsung Original", image: "images/produit-9.jpg", description: "Transmission rapide pour tous vos appareils Samsung." }
+            ],
+            "protections-ecran": [
+                { name: "Anti-casse 5D", image: "images/produit-10.jpg", description: "Protection écran incurvée 5D haute résistance." },
+                { name: "Anti-casse 11D", image: "images/produit-11.jpg", description: "Technologie de protection avancée 11D." }
+            ],
+            "coques-silicone": [
+                { name: "Silicone iPhone 14", image: "images/produit-12.jpg", description: "Protection sur mesure pour votre iPhone 14." },
+                { name: "Silicone Samsung A31", image: "images/produit-13.jpg", description: "Coque souple et élégante pour Samsung A31." },
+                { name: "Silicone Samsung A51", image: "images/produit-14.jpg", description: "Look moderne et protection optimale." },
+                { name: "Silicone Samsung A71", image: "images/produit-15.jpg", description: "Absorption des chocs et prise en main confortable." }
+            ]
+        };
+
+        const categoryTitle = document.getElementById("category-title");
+        const productsContainer = document.getElementById("products-container");
+
+        function createProductCard(product) {
+            const productDiv = document.createElement("div");
+            productDiv.classList.add("product-item");
+            productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+                <button class="btn-details" onclick="window.location.href='produit.html?product=${encodeURIComponent(product.name)}'">Voir détails</button>
+            `;
+            return productDiv;
+        }
+
+        if (category && products[category]) {
+            categoryTitle.innerText = `Produits - ${category.replace("-", " ").toUpperCase()}`;
+            products[category].forEach(product => {
+                productsContainer.appendChild(createProductCard(product));
+            });
+        } else {
+            categoryTitle.innerText = "Tous nos produits";
+            Object.keys(products).forEach(catKey => {
+                products[catKey].forEach(product => {
+                    productsContainer.appendChild(createProductCard(product));
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>

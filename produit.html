@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du produit - Ideal GSM Services</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- Scripts QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Détails du produit</h1>
+        <nav>
+            <button id="menu-toggle" class="menu-toggle">☰</button>
+            <ul id="menu-list" class="menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="catalogue.html">Produits</a></li>
+                <li><a href="apropos.html">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="offres.html">Offres</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- SECTION DÉTAILS PRODUIT -->
+    <section class="product-details">
+        <div id="product-container">
+            <p id="error-message"></p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Ideal GSM Services - Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // ✅ Récupération des paramètres de l'URL
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get("id");
+
+            // ✅ Définition des produits avec toutes les images
+            const allProducts = {};
+            for (let i = 1; i <= 78; i++) {
+                let extension = "jpg";
+                if (i >= 61 && i <= 75) extension = "png";
+                const imagePath = `images/produit-${i}.${extension}`;
+                allProducts[i] = {
+                    name: `Produit Numéro ${i}`,
+                    image: imagePath,
+                    description: `Description du produit numéro ${i}.`,
+                    price: `${(9.99 + (i % 10) * 2).toFixed(2)}€`
+                };
+            }
+
+            const productContainer = document.getElementById("product-container");
+            const errorMessage = document.getElementById("error-message");
+
+            if (productId && allProducts[productId]) {
+                const product = allProducts[productId];
+
+                productContainer.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" style="max-width:300px">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p><strong>Prix :</strong> ${product.price}</p>
+                    <div class="qr-container">
+                        <button id="generate-qr" class="qr-button">Générer QR Code</button>
+                        <span class="qr-caption">🎉 Remise 20% 🎉</span>
+                        <br>
+                        <canvas id="qr-canvas" style="display:none;"></canvas>
+                        <img id="qr-image" style="display:none;" alt="QR Code">
+                        <br>
+                        <a id="download-qr" class="qr-download" style="display:none;" download="qrcode.png">📥 Télécharger QR Code</a>
+                    </div>
+                    <a href="catalogue.html" class="btn">Retour au catalogue</a>
+                `;
+            } else {
+                errorMessage.innerText = "Produit non trouvé.";
+            }
+
+            // ✅ Génération du QR Code
+            document.addEventListener("click", function (event) {
+                if (event.target.id === "generate-qr") {
+                    const timestamp = new Date().getTime();
+                    const qrContent = `Produit : ${allProducts[productId].name} - Prix : ${allProducts[productId].price} - IDEAL GSM SERVICE - ${timestamp}`;
+                    
+                    const qr = new QRious({
+                        element: document.getElementById("qr-canvas"),
+                        value: qrContent,
+                        size: 200
+                    });
+
+                    // Convertir le QR Code en image
+                    const qrImage = document.getElementById("qr-image");
+                    qrImage.src = document.getElementById("qr-canvas").toDataURL();
+                    qrImage.style.display = "block";
+
+                    // Lien de téléchargement
+                    const downloadLink = document.getElementById("download-qr");
+                    downloadLink.href = qrImage.src;
+                    downloadLink.style.display = "block";
+                }
+            });
+
+            // ✅ Script pour le menu burger
+            const menuToggle = document.getElementById("menu-toggle");
+            const menuList = document.getElementById("menu-list");
+
+            if (menuToggle && menuList) {
+                menuToggle.addEventListener("click", function () {
+                    menuList.classList.toggle("active");
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
